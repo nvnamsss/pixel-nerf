@@ -60,6 +60,7 @@ class DVRDataset(torch.utils.data.Dataset):
                 objs = [(cat, os.path.join(base_dir, x.strip())) for x in f.readlines()]
             all_objs.extend(objs)
 
+        print(all_objs)
         self.all_objs = all_objs
         self.stage = stage
 

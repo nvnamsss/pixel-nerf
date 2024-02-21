@@ -60,6 +60,7 @@ class MultiObjectDataset(torch.utils.data.Dataset):
         if not self._check_valid(index):
             return {}
 
+        print("Loading", index)
         trans_file = self.trans_files[index]
         dir_path = os.path.dirname(trans_file)
         with open(trans_file, "r") as f:
@@ -74,6 +75,10 @@ class MultiObjectDataset(torch.utils.data.Dataset):
             basename = os.path.splitext(os.path.basename(fpath))[0]
             obj_path = os.path.join(dir_path, "{}_obj.png".format(basename))
             img = imageio.imread(obj_path)
+            # print(img.shape)
+            if img.shape[2] == 3:
+                img = self.rgb_to_rgbw(img)
+            # print(img.shape)
             mask = self.mask_to_tensor(img[..., 3])
             rows = np.any(img, axis=1)
             cols = np.any(img, axis=0)
@@ -115,3 +120,18 @@ class MultiObjectDataset(torch.utils.data.Dataset):
             "poses": poses,
         }
         return result
+
+    def rgb_to_rgbw(self, img):
+        # Calculate the minimum value in RGB channels
+        min_val = 1
+
+        # Create a new array with an extra channel for W
+        img_rgbw = np.zeros((*img.shape[:-1], 4), dtype=img.dtype)
+
+        # Assign RGB values
+        img_rgbw[..., :3] = img
+
+        # Assign W values
+        img_rgbw[..., 3] = min_val
+
+        return img_rgbw

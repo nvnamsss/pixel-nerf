@@ -16,11 +16,15 @@ def make_mlp(conf, d_in, d_latent=0, allow_empty=False, **kwargs):
 
 
 def make_encoder(conf, **kwargs):
+    print('himom3')
     enc_type = conf.get_string("type", "spatial")  # spatial | global
     if enc_type == "spatial":
+        print('himom1')
         net = SpatialEncoder.from_conf(conf, **kwargs)
     elif enc_type == "global":
+        print('himom2')
         net = ImageEncoder.from_conf(conf, **kwargs)
     else:
+        print('himom')
         raise NotImplementedError("Unsupported encoder type")
     return net

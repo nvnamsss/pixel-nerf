@@ -170,7 +170,7 @@ else:
         ],
         0,
     )  # (NV, 4, 4)
-
+    
 render_rays = util.gen_rays(
     render_poses,
     W,
